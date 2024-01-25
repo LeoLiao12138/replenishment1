@@ -22,6 +22,8 @@ def calculate_totals(worksheet,totle_replenishment):
     totle_stock = 0
     totle_stock_on_road = 0
     totle_replenishment_final = 0
+    totle_positive_final =0
+    totle_positive = 0
     maxrow = get_max_row(worksheet)
     # 计算D列的总和  
     for row in range(2, maxrow + 1):  
@@ -53,8 +55,22 @@ def calculate_totals(worksheet,totle_replenishment):
         cell = worksheet.cell(row=row, column=6)  # 读取F列的单元格  
         if cell.value is not None:  # 检查单元格是否为空  
             totle_replenishment_final += int(cell.value)  # 将值加到总和中 
-    worksheet.cell(row=maxrow, column=7, value="此次补货总量：")
-    worksheet.cell(row=maxrow, column=8, value=totle_replenishment_final)
+
+
+    for row in range(2, maxrow + 1): 
+        cell = worksheet.cell(row=row, column=6)  # 读取f列的单元格  
+        if cell.value >0:  # 检查内容是否大于0，如果大于0则是需要补货的  
+            totle_positive += int(cell.value)  # 将值加到需要正数的总和中 
+
+
+    for row in range(2, maxrow + 1):  #计算正数的项的比例
+        if worksheet.cell(row=row,column=6).value >0:
+            worksheet.cell(row=row, column=7, value=(worksheet.cell(row=row, column=6).value / totle_positive)) 
+            worksheet.cell(row=row, column=8, value=math.ceil(worksheet.cell(row=row, column=7).value * totle_replenishment)) 
+            totle_positive_final = totle_positive_final + worksheet.cell(row=row, column=8).value
+
+    worksheet.cell(row=maxrow, column=9, value="此次补货总量：")
+    worksheet.cell(row=maxrow, column=10, value=totle_positive_final)
 
 
 def calculate_totals_button():  
@@ -79,7 +95,9 @@ def open_file_dialog():
     # 选择要操作的工作表，例如第一个工作表  
     worksheet = workbook['Sheet1'] 
     worksheet.cell(row=1, column=5, value='销售比例')
-    worksheet.cell(row=1, column=6, value='补货数量')
+    worksheet.cell(row=1, column=6, value='理论补货')
+    worksheet.cell(row=1, column=7, value='实际补货比例')
+    worksheet.cell(row=1, column=8, value='实际补货数量')
     lable_path.config(text="当前选择文件为："+file_path)
 
 

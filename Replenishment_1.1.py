@@ -63,12 +63,14 @@ def calculate_totals(worksheet,totle_replenishment):
             totle_positive += int(cell.value)  # 将值加到需要正数的总和中 
 
 
-    for row in range(2, maxrow + 1):  #计算正数的项的比例
+    for row in range(2, maxrow + 1):  #计算正数的项的比例和补货总数
         if worksheet.cell(row=row,column=6).value >0:
             worksheet.cell(row=row, column=7, value=(worksheet.cell(row=row, column=6).value / totle_positive)) 
             worksheet.cell(row=row, column=8, value=math.ceil(worksheet.cell(row=row, column=7).value * totle_replenishment)) 
             totle_positive_final = totle_positive_final + worksheet.cell(row=row, column=8).value
-
+        else:
+            worksheet.cell(row=row, column=7, value=0)
+            worksheet.cell(row=row, column=8, value=0)
     worksheet.cell(row=maxrow, column=9, value="此次补货总量：")
     worksheet.cell(row=maxrow, column=10, value=totle_positive_final)
 

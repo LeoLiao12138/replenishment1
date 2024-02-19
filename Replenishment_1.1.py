@@ -76,15 +76,15 @@ def calculate_totals(worksheet,totle_replenishment):
 
 
 def calculate_totals_button():  
-    #try:
+    try:
         # 执行计算函数  
-    totle_replenishment = int(replenishment.get())
-    calculate_totals(worksheet,totle_replenishment)
-    messagebox.showinfo('提示', '补货数量计算完成')
+        totle_replenishment = int(replenishment.get())
+        calculate_totals(worksheet,totle_replenishment)
+        messagebox.showinfo('提示', '补货数量计算完成')
     # 保存更改并关闭工作簿  
-    workbook.save(filename=file_path)
-    #except Exception as e:  
-        #messagebox.showerror(Exception, e)
+        workbook.save(filename=file_path)
+    except Exception as e:  
+        messagebox.showerror(Exception, e)
 
 
 def open_file_dialog():  
